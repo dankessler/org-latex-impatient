@@ -103,6 +103,9 @@
 (defconst org-latex-impatient--output-buffer-prefix "*org-latex-impatient*"
   "Prefix for buffer to hold the output.")
 
+(defconst org-latex-impatient--stderr-buffer-prefix "*org-latex-impatient*-stderr"
+  "Prefix for buffer to hold the stderr.")
+
 (defconst org-latex-impatient--posframe-buffer "*org-latex-impatient*"
   "Buffer to hold the preview.")
 
@@ -120,6 +123,7 @@
 (defvar-local org-latex-impatient--last-preview nil)
 (defvar-local org-latex-impatient--current-window nil)
 (defvar-local org-latex-impatient--output-buffer nil)
+(defvar-local org-latex-impatient--stderr-buffer nil)
 (defvar-local org-latex-impatient--is-inline nil)
 (defvar-local org-latex-impatient--force-hidden nil)
 
@@ -177,6 +181,9 @@ available in upstream."
   (when (get-buffer org-latex-impatient--output-buffer)
     (let ((kill-buffer-query-functions nil))
       (kill-buffer org-latex-impatient--output-buffer)))
+  (when (get-buffer org-latex-impatient--stderr-buffer)
+    (let ((kill-buffer-query-functions nil))
+      (kill-buffer org-latex-impatient--stderr-buffer)))
   (setq org-latex-impatient--process nil
         org-latex-impatient--last-tex-string nil
         org-latex-impatient--last-position nil
@@ -417,7 +424,10 @@ for instant preview to work!")
           org-latex-impatient--last-preview nil))
   (when (get-buffer org-latex-impatient--output-buffer)
     (let ((kill-buffer-query-functions nil))
-      (kill-buffer org-latex-impatient--output-buffer))))
+      (kill-buffer org-latex-impatient--output-buffer)))
+  (when (get-buffer org-latex-impatient--stderr-buffer)
+    (let ((kill-buffer-query-functions nil))
+      (kill-buffer org-latex-impatient--stderr-buffer))))
 
 (defun org-latex-impatient--render (tex-string)
   "Render TEX-STRING to buffer, async version.
@@ -429,6 +439,7 @@ Showing at point END"
   (setq org-latex-impatient--last-tex-string tex-string)
   (setq org-latex-impatient--last-position org-latex-impatient--position)
   (get-buffer-create org-latex-impatient--output-buffer)
+  (get-buffer-create org-latex-impatient--stderr-buffer)
 
   (setq org-latex-impatient--process
         (make-process
@@ -438,7 +449,7 @@ Showing at point END"
                                 tex-string)
                           (when org-latex-impatient--is-inline
                             '("--inline")))
-         ;; :stderr ::my-err-buffer
+         :stderr org-latex-impatient--stderr-buffer
          :sentinel
          (lambda (&rest _)
            (condition-case nil
@@ -447,7 +458,10 @@ Showing at point END"
                  (org-latex-impatient--show)
                  (when (get-buffer org-latex-impatient--output-buffer)
                    (let ((kill-buffer-query-functions nil))
-                     (kill-buffer org-latex-impatient--output-buffer))))
+                     (kill-buffer org-latex-impatient--output-buffer)))
+                 (when (get-buffer org-latex-impatient--stderr-buffer)
+                   (let ((kill-buffer-query-functions nil))
+                     (kill-buffer org-latex-impatient--stderr-buffer))))
              (error nil))
            ;; ensure -process is reset
            (setq org-latex-impatient--process nil)))))
@@ -542,6 +556,8 @@ Showing at point END"
       (progn
         (setq org-latex-impatient--output-buffer
               (concat org-latex-impatient--output-buffer-prefix (buffer-name)))
+        (setq org-latex-impatient--stderr-buffer
+              (concat org-latex-impatient--stderr-buffer-prefix (buffer-name)))
         (add-hook 'post-command-hook #'org-latex-impatient--prepare-timer nil t))
     (remove-hook 'post-command-hook #'org-latex-impatient--prepare-timer t)
     (org-latex-impatient-stop)))
