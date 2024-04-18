@@ -473,8 +473,7 @@ Showing at point END"
                (not (equal org-latex-impatient-scale 1.0)))
       (setq ss
             (concat
-             ;; 100% seems wierd
-             "<svg height=\"110%\">"
+             "<svg xmlns=\"http://www.w3.org/2000/svg\">"
              ;; ad-hoc for scaling
              (format "<g transform=\"scale(%s)\">" org-latex-impatient-scale)
              ss
