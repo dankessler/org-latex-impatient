@@ -10,9 +10,9 @@
 * Installation
   You can install =MathJax-node-cli= via ~npm~:
   #+BEGIN_SRC shell
-npm install mathjax-node-cli
+    npm install -g mathjax-node-cli
   #+END_SRC
-  You need to set ~org-latex-impatient-tex2svg-bin~ to the location of the executable ~tex2svg~.
+  You may need to set ~org-latex-impatient-tex2svg-bin~ to the location of the executable ~tex2svg~.
 
 * Usage
    #+begin_src emacs-lisp

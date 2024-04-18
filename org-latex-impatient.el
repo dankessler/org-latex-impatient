@@ -41,7 +41,7 @@
 (require 'posframe)
 (require 'org-element)
 
-(defcustom org-latex-impatient-tex2svg-bin ""
+(defcustom org-latex-impatient-tex2svg-bin "tex2svg"
   "Location of tex2svg executable."
   :group 'org-latex-impatient
   :type '(string))
