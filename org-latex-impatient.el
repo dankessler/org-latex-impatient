@@ -240,9 +240,11 @@ available in upstream."
 
 (defun org-latex-impatient--tex-in-latex-p ()
   "Return t if in LaTeX fragment in `latex-mode', nil otherwise."
-  (let ((faces (face-at-point nil t)))
-    (or (-contains? faces 'font-latex-math-face)
-        (-contains? faces 'preview-face))))
+    (let ((faces (get-text-property (point) 'face)))
+      (or
+       (org-latex-impatient--equal-or-member 'font-latex-math-face faces)
+       (org-latex-impatient--equal-or-member 'preview-face faces)
+       (org-latex-impatient--equal-or-member 'tex-math faces))))
 
 (defun org-latex-impatient--has-latex-overlay ()
   "Return t if there is LaTeX overlay showing."
