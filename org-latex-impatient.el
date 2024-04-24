@@ -265,9 +265,7 @@ available in upstream."
              (while (org-latex-impatient--tex-in-latex-p)
                (forward-char))
              (setq end (point)))
-           (let ((ss (buffer-substring-no-properties begin end)))
-             (message "ss is %S" ss)
-             ss)))
+           (buffer-substring-no-properties begin end)))
         ((derived-mode-p 'markdown-mode)
          (let (begin end)
            (save-excursion
@@ -279,11 +277,8 @@ available in upstream."
                         (text-property--find-end-forward
                          (point) 'face 'markdown-math-face #'yang/equal-or-member)))
              (unless (looking-at (rx (or "$$" "\\]")))
-               (setq org-latex-impatient--is-inline t)
-               (message "setting is-line to %s" org-latex-impatient--is-inline)))
-           (let ((ss (buffer-substring-no-properties begin end)))
-             (message "ss is %S" ss)
-             ss)))
+               (setq org-latex-impatient--is-inline t)))
+           (buffer-substring-no-properties)))
         (t "")))
 
 (defun org-latex-impatient--get-tex-position ()
