@@ -282,11 +282,11 @@ available in upstream."
            (save-excursion
              (setq begin (prop-match-beginning
                           (text-property--find-end-backward
-                           (point) 'face 'markdown-math-face #'yang/equal-or-member))))
+                           (point) 'face 'markdown-math-face #'org-latex-impatient--equal-or-member))))
            (save-excursion
              (setq end (prop-match-end
                         (text-property--find-end-forward
-                         (point) 'face 'markdown-math-face #'yang/equal-or-member)))
+                         (point) 'face 'markdown-math-face #'org-latex-impatient--equal-or-member)))
              (unless (looking-at (rx (or "$$" "\\]")))
                (setq org-latex-impatient--is-inline t)
                (message "setting is-line to %s" org-latex-impatient--is-inline)))
@@ -310,7 +310,7 @@ available in upstream."
                 (save-excursion
                   (prop-match-end
                    (text-property--find-end-forward
-                    (point) 'face 'markdown-math-face #'yang/equal-or-member))))
+                    (point) 'face 'markdown-math-face #'org-latex-impatient--equal-or-member))))
                (t (message "Only org-mode, latex-mode, and markdown-mode supported") nil)))
         ((eq org-latex-impatient-posframe-position 'point)
          (point))
