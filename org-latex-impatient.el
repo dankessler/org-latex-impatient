@@ -254,7 +254,7 @@ available in upstream."
   "Return the string of LaTeX fragment."
   (cond ((derived-mode-p 'org-mode)
          (let ((datum (org-element-context)))
-           (org-element-property :value datum)))
+           (org-element-property :value datum nil 'force-undefer)))
         ((derived-mode-p 'latex-mode)
          (let (begin end)
            (save-excursion
